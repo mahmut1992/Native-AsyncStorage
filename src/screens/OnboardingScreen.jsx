@@ -23,7 +23,8 @@ const OnboardingScreen = () => {
   const doneButton = ({...props}) => {
     return (
       <TouchableOpacity style={styles.doneButton} {...props}>
-        <Text>Tamam</Text>
+        <Text>Done</Text>{' '}
+        {/* 'Tamam' ifadesi burada 'Done' olarak değiştirildi */}
       </TouchableOpacity>
     );
   };
@@ -49,8 +50,8 @@ const OnboardingScreen = () => {
                 />
               </View>
             ),
-            title: 'Verimliliği Artır',
-            subtitle: 'Verimlilik seviyeni artırmak için bu kanala abone ol',
+            title: 'Boost Your Productivity', // 'Verimliliğinizi Artırın'
+            subtitle: 'Join our Udemig courses to enhance your skills!', // 'Yeteneklerinizi geliştirmek için Udemy eğitimlerimize katılın!'
           },
 
           {
@@ -65,8 +66,9 @@ const OnboardingScreen = () => {
                 />
               </View>
             ),
-            title: 'Kesintisiz Çalış',
-            subtitle: 'Kesintisiz bir şekilde işlerini sorunsuzca tamamla',
+            title: 'Work Without Interruptions', // 'Kesintisiz Çalış'
+            subtitle:
+              'Complete your tasks smoothly with our productivity tips.', // 'Verimlilik ipuçlarımızla görevlerinizi sorunsuz bir şekilde tamamlayın.'
           },
           {
             backgroundColor: '#a7f3d0',
@@ -80,9 +82,9 @@ const OnboardingScreen = () => {
                 />
               </View>
             ),
-            title: 'Daha Yüksek Hedeflere Ulaş',
+            title: 'Reach Higher Goals', // 'Daha Yüksek Hedeflere Ulaş'
             subtitle:
-              'Verimliliğini artırarak daha yüksek hedeflere ulaşmana yardımcı oluyoruz',
+              'Utilize our platform to achieve your professional aspirations.', // 'Profesyonel hedeflerinize ulaşmak için platformumuzu kullanın.'
           },
         ]}
       />
