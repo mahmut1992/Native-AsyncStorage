@@ -5,6 +5,7 @@ import HomeScreen from '../screens/HomeScreen.jsx';
 import OnboardingScreen from '../screens/OnboardingScreen.jsx';
 import {getItem} from '../utils/asyncStorage.js';
 import TodosScreen from '../screens/TodosScreen.jsx';
+import Example from '../example.jsx';
 
 const Stack = createNativeStackNavigator();
 

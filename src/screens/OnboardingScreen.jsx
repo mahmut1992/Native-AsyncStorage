@@ -23,7 +23,7 @@ const OnboardingScreen = () => {
   const doneButton = ({...props}) => {
     return (
       <TouchableOpacity style={styles.doneButton} {...props}>
-        <Text>Done</Text>{' '}
+        <Text>Done</Text>
         {/* 'Tamam' ifadesi burada 'Done' olarak değiştirildi */}
       </TouchableOpacity>
     );
