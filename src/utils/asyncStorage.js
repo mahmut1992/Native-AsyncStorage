@@ -4,23 +4,23 @@ export const setItem = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);
   } catch (error) {
-    console.log('Error storing value: ', error);
+    console.log('setItem', error);
   }
 };
 
 export const getItem = async key => {
   try {
     const value = await AsyncStorage.getItem(key);
-    return value;
+    console.log(`🔍 AsyncStorage'dan gelen veri: ${key} = ${value}`); // DEBUG
   } catch (error) {
-    console.log('Error retrieving value: ', error);
+    console.log('getItem', error);
   }
 };
 
 export const removeItem = async key => {
   try {
-    await AsyncStorage.removeItem(key);
+    const value = await AsyncStorage.removeItem(key);
   } catch (error) {
-    console.log('Error deleting value: ', error);
+    console.log('removeItem', error);
   }
 };

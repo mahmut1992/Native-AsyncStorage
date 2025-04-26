@@ -1,75 +1,41 @@
-import {useNavigation} from '@react-navigation/native';
 import Lottie from 'lottie-react-native';
 import {
   Dimensions,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
-import {setItem} from '../utils/asyncStorage';
+import {setItem, getItem} from '../utils/asyncStorage';
+import {useNavigation} from '@react-navigation/native';
+import SCREENS from '../utils/router';
 
 const {width, height} = Dimensions.get('window');
-
+const {HOME, ONBOARDING, TODOS} = SCREENS;
 const OnboardingScreen = () => {
   const navigation = useNavigation();
-
-  const handleDone = () => {
-    navigation.navigate('Home');
-    setItem('onboarded', '1');
+  const handleDone = async () => {
+    await setItem('onboarded', '1');
+    const checkValue = await getItem('onboarded'); // Kaydedilen değeri kontrol et
+    console.log(`✅ Kaydedilen onboarded değeri: ${checkValue}`); // DEBUG
+    navigation.replace(HOME);
   };
-
   const doneButton = ({...props}) => {
     return (
       <TouchableOpacity style={styles.doneButton} {...props}>
         <Text>Done</Text>
-        {/* 'Tamam' ifadesi burada 'Done' olarak değiştirildi */}
       </TouchableOpacity>
     );
   };
-
   return (
     <View style={styles.container}>
       <Onboarding
         onDone={handleDone}
         onSkip={handleDone}
-        //bottomBarHighlight={false}
         DoneButtonComponent={doneButton}
         containerStyles={{paddingHorizontal: 15}}
         pages={[
-          {
-            backgroundColor: '#a78bfa',
-            image: (
-              <View style={styles.lottie}>
-                <Lottie
-                  style={{flex: 1}}
-                  source={require('../assets/animations/achieve.json')}
-                  autoPlay
-                  loop
-                />
-              </View>
-            ),
-            title: 'Boost Your Productivity', // 'Verimliliğinizi Artırın'
-            subtitle: 'Join our Udemig courses to enhance your skills!', // 'Yeteneklerinizi geliştirmek için Udemy eğitimlerimize katılın!'
-          },
-
-          {
-            backgroundColor: '#fef3c7',
-            image: (
-              <View style={styles.lottie}>
-                <Lottie
-                  style={{flex: 1}}
-                  source={require('../assets/animations/work.json')}
-                  autoPlay
-                  loop
-                />
-              </View>
-            ),
-            title: 'Work Without Interruptions', // 'Kesintisiz Çalış'
-            subtitle:
-              'Complete your tasks smoothly with our productivity tips.', // 'Verimlilik ipuçlarımızla görevlerinizi sorunsuz bir şekilde tamamlayın.'
-          },
           {
             backgroundColor: '#a7f3d0',
             image: (
@@ -82,9 +48,54 @@ const OnboardingScreen = () => {
                 />
               </View>
             ),
-            title: 'Reach Higher Goals', // 'Daha Yüksek Hedeflere Ulaş'
+            title: 'Boost Your Productivity',
+            subtitle: 'Join our Udemig courses to enhance your skills!',
+            subTitleStyles: {
+              fontSize: 18,
+              color: '#333',
+              textAlign: 'center',
+            },
+          },
+          {
+            backgroundColor: '#fef3ce',
+            image: (
+              <View style={styles.lottie}>
+                <Lottie
+                  style={{flex: 1}}
+                  source={require('../assets/animations/achieve.json')}
+                  autoPlay
+                  loop
+                />
+              </View>
+            ),
+            title: 'Work Without Interruptions',
+            subtitle: 'Complete yout tasks smootly with our productivity tip!',
+            subTitleStyles: {
+              fontSize: 18,
+              color: '#333',
+              textAlign: 'center',
+            },
+          },
+          {
+            backgroundColor: '#a78bfa',
+            image: (
+              <View style={styles.lottie}>
+                <Lottie
+                  style={{flex: 1}}
+                  source={require('../assets/animations/work.json')}
+                  autoPlay
+                  loop
+                />
+              </View>
+            ),
+            title: 'Reach Higher Goals',
             subtitle:
-              'Utilize our platform to achieve your professional aspirations.', // 'Profesyonel hedeflerinize ulaşmak için platformumuzu kullanın.'
+              'Utilize our platform to achieve your profossional aspirations !',
+            subTitleStyles: {
+              fontSize: 18,
+              color: '#333',
+              textAlign: 'center',
+            },
           },
         ]}
       />

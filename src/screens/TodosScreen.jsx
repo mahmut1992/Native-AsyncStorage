@@ -1,239 +1,168 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  SafeAreaView,
-  TextInput,
-  Text,
-  View,
-  TouchableOpacity,
-  FlatList,
-  Alert,
-} from 'react-native';
-import uuid from 'react-native-uuid';
-import LinearGradient from 'react-native-linear-gradient';
 import {
   AddCircle,
-  BagTick,
+  BagCross,
+  CloseCircle,
   Edit2,
   TickCircle,
-  CloseCircle,
 } from 'iconsax-react-native';
+import {useEffect, useState} from 'react';
+import {
+  Alert,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  Touchable,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import uuid from 'react-native-uuid';
 
 const TodosScreen = () => {
-  // Kullanıcı tarafından girilen todo öğesini saklamak için state
   const [todo, setTodo] = useState('');
-
-  // Todo listesini saklamak için state
   const [todos, setTodos] = useState([]);
-
-  // Todo listesini AsyncStorage'e kaydetme fonksiyonu
   const saveTodos = async saveTodo => {
     try {
-      // 'todos' verisini AsyncStorage'e kaydediyoruz
       await AsyncStorage.setItem('todos', JSON.stringify(saveTodo));
     } catch (error) {
-      // Hata durumunda hata mesajını konsola yazdırıyoruz
       console.log('error', error);
     }
   };
-
-  // Yeni bir todo eklemek için kullanılan fonksiyon
   const addTodo = () => {
-    // Eğer kullanıcı bir metin girdiyse todo ekleyelim
     if (todo) {
-      // Yeni todo nesnesi oluşturuluyor
-      const updateTodos = [
-        ...todos, // mevcut todos listesine ekleme yapıyoruz
-        {id: uuid.v4(), text: todo, completed: false}, // yeni todo objesi
-      ];
-      // Todo listesini güncelliyoruz
+      const updateTodos = [...todos, {id: uuid.v4(), text: todo}];
       setTodos(updateTodos);
-      // Yeni todo'yu AsyncStorage'e kaydediyoruz
       saveTodos(updateTodos);
-      // Girdi alanını temizliyoruz
       setTodo('');
     }
   };
 
-  // AsyncStorage'den todos listesini yükleme fonksiyonu
   const loadTodos = async () => {
     try {
-      // 'todos' verisini AsyncStorage'den alıyoruz
       const storedData = await AsyncStorage.getItem('todos');
-      // Eğer veriler varsa, JSON olarak parse edip todos state'ine aktarıyoruz
       if (storedData) {
         setTodos(JSON.parse(storedData));
       }
     } catch (error) {
-      // Hata durumunda konsola yazdırıyoruz
-      console.log(error);
+      console.log('error', error);
     }
   };
 
-  // Bir todo öğesini silme fonksiyonu
-  const deleteTodo = async id => {
-    // Silinecek todo'yu filtreliyoruz
-    const updatedTodos = todos.filter(item => item.id !== id);
-    // Todo listemizi güncelliyoruz
-    setTodos(updatedTodos);
-    // Yeni listeyi AsyncStorage'e kaydediyoruz
-    saveTodos(updatedTodos);
-  };
-
-  // Bir todo öğesinin tamamlanma durumunu değiştirme fonksiyonu
-  const completeTodo = async id => {
-    // Todos listesini map'leyerek, id'si eşleşen öğeyi buluyoruz
+  const completeTodo = id => {
     const updatedTodos = todos.map(item =>
-      item.id === id ? {...item, completed: !item.completed} : item,
+      item.id == id ? {...item, completed: !item.completed} : item,
     );
-    // Todo listesini güncelliyoruz
     setTodos(updatedTodos);
-    // Yeni listeyi AsyncStorage'e kaydediyoruz
     saveTodos(updatedTodos);
   };
 
-  // Bir todo öğesini düzenlemek için kullanılan fonksiyon
-  const updateTodos = id => {
-    // Güncellenmek istenen todo'yu buluyoruz
-    const exitingTodo = todos.find(x => x.id === id);
-    if (!exitingTodo) return; // Eğer todo bulunamazsa, işlem yapma
+  const deleteTodo = id => {
+    const updatedTodos = todos.filter(item => item.id !== id);
+    setTodos(updatedTodos);
+    saveTodos(updatedTodos);
+  };
 
-    // Kullanıcıdan yeni todo metnini almak için alert prompt açıyoruz
+  const updateTodos = id => {
+    const foundedTodos = todos.find(item => item.id == id);
+    if (!foundedTodos) return;
+
     Alert.prompt(
-      'Edit Todo', // Başlık
-      'Update', // Açıklama
+      'Edit Todo',
+      'Update',
       newUpdateText => {
-        // Eğer yeni bir metin girilmişse
         if (newUpdateText) {
-          // Todos listesini güncelliyoruz
           const updatedTodos = todos.map(item =>
-            item.id === id ? {...item, text: newUpdateText} : item,
+            item.id == id ? {...item, text: newUpdateText} : item,
           );
-          // Todo listesini güncelliyoruz
           setTodos(updatedTodos);
-          // Yeni listeyi AsyncStorage'e kaydediyoruz
           saveTodos(updatedTodos);
         }
       },
-      'plain-text', // Alert'in tipi (sadece düz metin)
-      exitingTodo.text, // Varsayılan metin olarak mevcut todo'yu ekliyoruz
+      'plain-text',
+      foundedTodos.text,
     );
   };
 
-  // Tüm todo öğelerini silme fonksiyonu
-  const clearTodos = async () => {
-    setTodos([]); // Todo listesini sıfırlıyoruz
-    await AsyncStorage.removeItem('todos'); // AsyncStorage'den tüm todo'ları siliyoruz
-  };
-
-  // AsyncStorage'daki tüm verileri temizleme fonksiyonu
-  const clearStorage = async () => {
-    try {
-      await AsyncStorage.clear(); // Tüm AsyncStorage verilerini siliyoruz
-      setTodos([]); // Todo state'ini boşaltıyoruz
-      Alert.alert('Başarılı', 'Tüm veriler temizlendi'); // Başarılı olduğunda bir uyarı gösteriyoruz
-    } catch (error) {
-      Alert.alert('Hata', 'Veriler temizlenemedi'); // Hata durumunda uyarı veriyoruz
-    }
-  };
-
-  // Uygulama ilk açıldığında todos listesini yüklemek için useEffect kullanıyoruz
   useEffect(() => {
-    loadTodos(); // Todo listesini yükle
-  }, []); // Boş bağımlılık array'i ile sadece ilk renderda çalışacak
-
+    loadTodos();
+  }, []);
   return (
     <LinearGradient colors={['#fef3c7', '#a78bfa']} style={styles.container}>
-      {/* SafeAreaView ile ekranın üst kısmındaki güvenli alanı kullanıyoruz */}
       <SafeAreaView>
-        {/* Başlık */}
         <Text style={styles.headerText}>TO-DO LIST</Text>
 
-        {/* Todo ekleme inputu */}
         <View style={styles.inputContainer}>
           <TextInput
-            onChangeText={text => setTodo(text)} // Input değiştiğinde todo state'ini güncelliyoruz
-            value={todo} // Todo state'ini inputun değerine bağlıyoruz
-            placeholder="Type a Todo" // Input için yer tutucu
-            style={styles.input} // Input stilini ayarlıyoruz
+            onChangeText={text => setTodo(text)}
+            value={todo}
+            placeholder="Type a Todo"
+            style={styles.input}
           />
-          {/* Todo ekleme butonu */}
           <TouchableOpacity
-            onPress={addTodo} // Butona basıldığında todo ekle fonksiyonu çalışacak
+            onPress={addTodo}
             style={[styles.button, styles.addButton]}>
             <Text style={styles.buttonText}>
-              {/* + işareti (AddCircle iconu) */}
               <AddCircle size="32" color="#FF8A65" variant="Broken" />
             </Text>
           </TouchableOpacity>
         </View>
 
-        {/* Yeni "Clear All" butonu */}
-        <TouchableOpacity
-          onPress={clearTodos} // Tüm todo'ları sil
-          style={[styles.button, styles.clearButton]}>
-          <Text style={styles.buttonText}>Clear All Todos</Text>
-        </TouchableOpacity>
-
-        {/* Yeni "Clear All Storage" butonu */}
-        <TouchableOpacity
-          onPress={clearStorage} // Tüm AsyncStorage verilerini sil
-          style={[styles.button, styles.clearStorageButton]}>
-          <Text style={styles.buttonText}>Clear All Storage</Text>
-        </TouchableOpacity>
-
-        {/* Todo öğelerini listelemek için FlatList */}
         <FlatList
-          data={todos} // Todo verilerini FlatList'e bağlıyoruz
-          keyExtractor={item => item?.id?.toString()} // Her öğe için benzersiz bir anahtar belirliyoruz
+          data={todos}
           renderItem={({item}) => (
             <View style={styles.todoItem}>
-              {/* Todo metnini ekrana yazdırıyoruz ve tamamlanmışsa farklı stil veriyoruz */}
               <Text
                 style={[
                   styles.todoText,
-                  item.completed && styles.completedText, // Tamamlanmış todo'ya stil ekliyoruz
+                  item.completed && styles.completedText,
                 ]}>
-                {item?.text}
+                {item.text.length > 25
+                  ? item.text.slice(0, 20) + '...'
+                  : item.text}
               </Text>
-
-              {/* Todo öğesine ait butonlar */}
               <View style={{flexDirection: 'row'}}>
-                {/* Tamamlama butonu */}
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity
-                    onPress={() => completeTodo(item?.id)} // Todo tamamlandığında tamamla fonksiyonu çalışacak
-                    style={[styles.button, styles.completeButton]}>
-                    <Text style={styles.buttonText}>
-                      {/* Tamamlanmışsa bir X ikonu, tamamlanmamışsa onay işareti */}
+                    style={[styles.button, styles.completeButton]}
+                    onPress={() => completeTodo(item?.id)}>
+                    <Text>
+                      {/* Tamamlanmışsa X iconu tamamlanmamışsa onay iconu */}
                       {item.completed ? (
-                        <CloseCircle size="24" color="#000" />
+                        <CloseCircle
+                          size="27"
+                          color="#FF8A65"
+                          variant="Broken"
+                        />
                       ) : (
-                        <TickCircle size="27" color="#FF8A65" />
+                        <TickCircle
+                          size="27"
+                          color="#FF8A65"
+                          variant="Broken"
+                        />
                       )}
                     </Text>
                   </TouchableOpacity>
                 </View>
-
-                {/* Silme butonu */}
+                {/* silme butonu */}
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity
-                    onPress={() => deleteTodo(item?.id)} // Todo silindiğinde silme fonksiyonu çalışacak
-                    style={[styles.button, styles.deleteButton]}>
-                    <Text style={styles.buttonText}>
-                      <BagTick size="27" color="#FF8A65" variant="Broken" />
+                    style={[styles.button, styles.deleteButton]}
+                    onPress={() => deleteTodo(item.id)}>
+                    <Text>
+                      <BagCross size="27" color="#FF8A65" variant="Broken" />
                     </Text>
                   </TouchableOpacity>
                 </View>
-
                 {/* Düzenleme butonu */}
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity
-                    onPress={() => updateTodos(item?.id)} // Todo düzenlendiğinde düzenleme fonksiyonu çalışacak
+                    onPress={() => updateTodos(item?.id)}
                     style={[styles.button, styles.updateButton]}>
-                    <Text style={styles.buttonText}>
-                      <Edit2 size="27" color="#FF8A65" />
+                    <Text>
+                      <Edit2 size="27" color="#FF8A65" variant="Broken" />
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -251,13 +180,18 @@ export default TodosScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
   },
   headerText: {
     fontSize: 24,
     marginBottom: 20,
+    padding: 20,
     fontWeight: 'bold',
     color: '#000',
+  },
+  inputContainer: {
+    padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   input: {
     borderWidth: 1,
@@ -265,10 +199,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: 'gray',
     flex: 1,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   button: {
     marginLeft: 10,
@@ -283,27 +213,25 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   todoItem: {
+    padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 15,
   },
   todoText: {
+    padding: 5,
     color: '#000',
     textDecorationLine: 'none',
     fontSize: 18,
     fontWeight: 'bold',
   },
+  buttonContainer: {
+    marginRight: 10,
+  },
+
+  deleteButton: {},
   completedText: {
     textDecorationLine: 'line-through',
     color: 'gray',
-  },
-  completeButton: {
-    padding: 10,
-  },
-  deleteButton: {
-    padding: 10,
-  },
-  updateButton: {
-    padding: 10,
   },
 });

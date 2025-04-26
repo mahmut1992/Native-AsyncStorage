@@ -1,26 +1,26 @@
-import {useNavigation} from '@react-navigation/native';
-import Lottie from 'lottie-react-native';
 import {
+  Dimensions,
   SafeAreaView,
   StyleSheet,
   Text,
-  View,
-  Dimensions,
   TouchableOpacity,
+  View,
 } from 'react-native';
+import Lottie from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {useNavigation} from '@react-navigation/native';
+import SCREENS from '../utils/router';
 import {removeItem} from '../utils/asyncStorage';
 
 const {width, height} = Dimensions.get('window');
+const {HOME, ONBOARDING, TODOS} = SCREENS;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-
   const handleReset = async () => {
     await removeItem('onboarded');
-    navigation.push('Onboarding');
+    navigation.replace(ONBOARDING);
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.lottie}>
@@ -31,22 +31,28 @@ const HomeScreen = () => {
           loop
         />
       </View>
-
       <TouchableOpacity
-        onPress={() => navigation.navigate('Todo')}
-        style={styles.addtaskButton}>
+        onPress={() => navigation.navigate(TODOS)}
+        style={styles.addTaskButton}>
         <LinearGradient
-          colors={['#a78bfa', '#fef3c7']} // Güncellenmiş renkler
-          style={styles.addtaskButton}>
-          <Text style={styles.addtaskText}>New Task, Who’s In?</Text>
+          style={styles.addTaskButton}
+          colors={['#a78bfa', '#fef3c7']}>
+          <Text style={{color: 'black'}}>New Task, Who's In?</Text>
         </LinearGradient>
       </TouchableOpacity>
-
-      <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
+      <TouchableOpacity onPress={handleReset} style={styles.resetButton}>
         <LinearGradient
-          colors={['#a7f3d0', '#ff6347']} // Güncellenmiş renkler
-          style={styles.resetButton}>
-          <Text style={styles.resetText}>Reset</Text>
+          style={styles.resetButton}
+          colors={['#a7f3d0', '#ff6347']}>
+          <Text
+            style={{
+              color: '#fff',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              fontSize: 18,
+            }}>
+            Reset
+          </Text>
         </LinearGradient>
       </TouchableOpacity>
     </SafeAreaView>
@@ -59,48 +65,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#fef3c7', // Sayfanın arka plan rengi
+    backgroundColor: '#fef3c7',
   },
   lottie: {
     width: width * 0.9,
     height: width,
   },
-
-  addtaskButton: {
+  addTaskButton: {
     paddingVertical: 15,
     paddingHorizontal: 30,
-    borderRadius: 20,
+    borderRadius: 15,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
-    shadowRadius: 3.84,
+    shadowRadius: 3.85,
     elevation: 5,
-    marginTop: 20,
   },
-
-  addtaskText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-
   resetButton: {
     paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 20,
+    paddingHorizontal: 20,
+    borderRadius: 15,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
-    shadowRadius: 3.84,
+    shadowRadius: 3.85,
     elevation: 5,
-    marginTop: 20,
-  },
-
-  resetText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
 });
