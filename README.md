@@ -33,7 +33,10 @@
 ## 📸 App Screenshot
 
 
-![Uploading ZightRecording2025-04-26at02.52.21PM-ezgif.com-video-to-gif-converter (1).gif…]()
+
+https://github.com/user-attachments/assets/16274579-2336-41e1-b8eb-3eab4ff65091
+
+
 
 
 ---
