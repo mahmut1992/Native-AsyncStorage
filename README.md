@@ -1,17 +1,50 @@
-<h1> ReactNative_TodoAsyncStorage </h1>
+# 📦 React Native AsyncStorage Task Manager
 
-This project involved creating a visually appealing app store screen using React Native, along with Expo, Tailwind CSS for styling, linear gradients for background effects, hero icons for icons, and navigation.
+🔗 **This repository contains a basic Task Manager application developed with React Native. The app uses AsyncStorage to persist tasks even after the device is closed or restarted.**
 
-<h2>Steps in Summary:<h2>
+---
 
-- Setup: Start with Expo to create a new React Native project.
-- Styling: Integrate Tailwind CSS for efficient and responsive styling.
-  Background Effects: Use linear gradients to enhance the visual appeal of backgrounds.
-- Icon Integration: Implement Hero Icons for high-quality icons in the app.
-- Navigation: Utilize React Navigation to set up navigation between different screens.
+## 🚀 Features
 
-<h2> Screenshot </h2>
+- Add and delete tasks locally  
+- Data persistence using AsyncStorage  
+- Smooth onboarding screen with animations  
+- Unique ID generation for each task  
+- Linear gradient styled UI elements  
+- Fully responsive and modern design  
+- React Native + TypeScript support  
+
+---
+
+## 🛠️ Technologies Used
+
+- React Native  
+- React  
+- TypeScript  
+- React Navigation (Native Stack)  
+- AsyncStorage  
+- Lottie Animations  
+- Iconsax React Native  
+- React Native Linear Gradient  
+- React Native SVG  
+
+---
+
+## 📸 App Screenshot
 
 ![](screen.gif)
-# Native-AsyncStorage
-# Native-AsyncStorage
+
+
+---
+
+## 📝 Project Purpose
+
+This project aims to demonstrate how to manage local data storage efficiently in a mobile app using AsyncStorage. It also shows a clean task management experience with animations and a responsive design.
+
+---
+
+## 📩 Contact
+
+For questions or feedback:
+
+📧 **fratsbht@icloud.com**
