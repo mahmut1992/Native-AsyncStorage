@@ -32,7 +32,8 @@
 
 ## 📸 App Screenshot
 
-![](screen.gif)
+
+![Uploading ZightRecording2025-04-26at02.52.21PM-ezgif.com-video-to-gif-converter (1).gif…]()
 
 
 ---
